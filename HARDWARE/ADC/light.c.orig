@@ -1,0 +1,90 @@
+#include "light.h"
+
+//AD转换之光敏电阻
+//PA0 ---> ADC123_IN0 
+
+void ADC_Light_Init()
+{
+	
+		GPIO_InitTypeDef GPIO_InitStruct;
+	/*----- 1.使能 RCC_AHB1外设总线的 GPIOA ---*/
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+	
+	/*----- 2.初始化GPIO引脚 ------------------*/
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AN;					//模式:模拟
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
+	
+	GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+		
+	//2.配置ADC公共设置 (很多通道都是用的是同一个ADC)
+	ADC_CommonInitTypeDef ADC_CommonInitStruct;
+	ADC_CommonStructInit(&ADC_CommonInitStruct);
+	ADC_CommonInit(&ADC_CommonInitStruct);
+	
+	//3.ADC参数配置
+	ADC_InitTypeDef ADC_InitStruct;
+	ADC_StructInit(&ADC_InitStruct);
+	ADC_Init(ADC2, &ADC_InitStruct);
+	
+	//4.使能ADC功能
+	ADC_Cmd(ADC2, ENABLE);
+//		GPIO_InitTypeDef GPIO_InitStruct;
+//		ADC_CommonInitTypeDef ADC_CommonInitStruct;
+//		ADC_InitTypeDef ADC_InitStruct;
+//   //1.使能GPIO时钟和ADC1时钟
+//	RCC_AHB1PeriphResetCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+//    RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC2,ENABLE);
+//	
+//	//2.配置GPIOA pin0为模拟输入
+
+//	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AN;
+//	GPIO_InitStruct.GPIO_Pin =  GPIO_Pin_0;
+//	GPIO_Init(GPIOA,&GPIO_InitStruct);
+//	
+//	//3.ADC公共配置
+
+//	ADC_CommonInitStruct.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
+//	ADC_CommonInitStruct.ADC_Mode =   ADC_Mode_Independent;
+//	ADC_CommonInitStruct.ADC_Prescaler =   ADC_Prescaler_Div4;
+//	ADC_CommonInitStruct.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
+//	ADC_CommonInit(&ADC_CommonInitStruct);
+//	
+//	//4.ADC参数配置
+
+//	ADC_InitStruct.ADC_ContinuousConvMode = DISABLE;
+//	ADC_InitStruct.ADC_DataAlign =  ADC_DataAlign_Right;
+//	ADC_InitStruct.ADC_ExternalTrigConv =   ADC_ExternalTrigConv_T1_CC1;
+//	ADC_InitStruct.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None; 
+//	ADC_InitStruct.ADC_NbrOfConversion =  1;
+//	ADC_InitStruct.ADC_Resolution = ADC_Resolution_12b;
+//	ADC_InitStruct.ADC_ScanConvMode = DISABLE;
+//	ADC_Init(ADC2,&ADC_InitStruct);
+
+
+//	ADC_Cmd(ADC2,ENABLE);
+
+}
+
+u16 GET_Light()
+{
+	ADC_RegularChannelConfig(ADC2,ADC_Channel_0, 1, ADC_SampleTime_480Cycles);
+	ADC_SoftwareStartConv(ADC2);
+	while(ADC_GetFlagStatus(ADC2, ADC_FLAG_EOC) == RESET);
+	return ADC_GetConversionValue(ADC2);
+}
+
+
+u16 GET_Average_Light()
+{
+	u16 temp = 0;
+	for(int i = 0;i < 10;i++)
+	{
+		temp += GET_Light();
+	}
+	
+	return temp/10;
+}
+
+
+

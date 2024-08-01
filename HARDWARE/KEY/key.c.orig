@@ -1,0 +1,71 @@
+#include "key.h"
+
+//KEY1 ----> PE4 
+//KEY2 -->PE5 
+//KEY3---->PE6
+//KEY4 ---->PC13
+//AHB1
+
+void KEY_Init()
+{
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+	
+	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_InitStruct.GPIO_Pin =  GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_25MHz;
+	GPIO_Init(GPIOE,&GPIO_InitStruct);
+	GPIO_InitStruct.GPIO_Pin =  GPIO_Pin_13;
+	GPIO_Init(GPIOC,&GPIO_InitStruct);
+}
+
+#include "delay.h"
+
+//°´¼üÉ¨Ãè
+u8 KEY_Scan()
+{
+   if(KEY1 == 0)
+   {
+	  delay_ms(20);
+	  if(KEY1 == 0)
+	  {	
+		 return KEY1_Press;
+	  }
+   
+   }
+      if(KEY2 == 0)
+   {
+	  delay_ms(20);
+	  if(KEY2 == 0)
+	  {	
+		 return KEY2_Press;
+	  }
+   
+   }
+      if(KEY3 == 0)
+   {
+	  delay_ms(20);
+	  if(KEY3 == 0)
+	  {	
+		 return KEY3_Press;
+	  }
+   
+   }
+      if(KEY4 == 0)
+   {
+	  delay_ms(20);
+	  if(KEY4 == 0)
+	  {	
+		 return KEY4_Press;
+	  }
+   
+   }
+   
+   return -1;
+	   
+}
+
+
+

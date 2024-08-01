@@ -1,0 +1,24 @@
+#ifndef __IIC_H_
+#define __IIC_H_
+
+
+#include "sys.h"
+
+//SCL拉低或释放
+#define SCL_OUT PBOut(6)
+#define SDA_OUT PBOut(7)
+
+//读取SDA电平状态
+u8 SDA_READ()
+{
+	return GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_7);
+}
+
+void IIC_RecvData(u32 Addr,u32 addr,char *Data,int len)   ;
+	u8 IIC_SendData(u32 Addr,u32 addr,char *Data,int len);
+		u8 IIC_ReadByte()    ;
+	void IIC_SendByte(u8 ch);
+
+void MyIIC_Init(void);
+
+#endif

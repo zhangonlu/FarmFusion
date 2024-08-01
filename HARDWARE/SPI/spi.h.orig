@@ -1,0 +1,17 @@
+#ifndef __SPI_H_
+#define __SPI_H_
+
+#include "sys.h"
+
+
+
+#define MOSI_OUT PBOut(5)
+#define CS_OUT PBOut(2)
+#define SCL_OUT PBOut(3)
+#define MISO_IN PBIn(4)
+
+u8 SPI_SendByte(u8 Data) 
+ void SPI_Start()
+	  void SPI_SoftWare_AF_Init()
+void SPI_Stop()
+#endif

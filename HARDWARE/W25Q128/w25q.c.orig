@@ -1,0 +1,18 @@
+#include "w25q.h"
+
+void W25Q_Init()
+{
+   SPI_SoftWare_AF_Init();
+}
+
+
+void W25Q_Send(u8 *MID,u16 *DID)
+{
+	SPI_Start();
+    SPI_SendByte(0x9F);
+    *MID = SPI_SendByte(0xFF);
+    *DID =  SPI_SendByte(0xFF);
+	*DID <<= 8;
+	*DID |= SPI_SendByte(0xFF); 	
+	SPI_Stop();
+}	
